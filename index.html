@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f2f4f" />
+  <title>Banten Market Control</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{
+      --navy:#0f2f4f; --navy2:#123a63; --gold:#d7a64a; --cream:#f7f1e7;
+      --bg:#f4f7fb; --card:#ffffff; --text:#172033; --muted:#65748b;
+      --green:#198754; --red:#c0392b; --blue:#2563eb; --orange:#d97706;
+      --shadow:0 14px 35px rgba(15,47,79,.12); --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef5fb 0%,#f8fafc 55%,#fff 100%);color:var(--text)}
+    .app{min-height:100vh;display:flex;flex-direction:column}
+    .topbar{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;padding:16px 18px;box-shadow:0 10px 25px rgba(15,47,79,.2)}
+    .brand{display:flex;align-items:center;gap:12px;max-width:1180px;margin:auto}
+    .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--gold),#f5d27b);display:grid;place-items:center;color:var(--navy);font-weight:900;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+    .brand h1{font-size:19px;line-height:1.15;margin:0;letter-spacing:.2px}.brand p{margin:2px 0 0;color:#d9e5f4;font-size:12px}.pill{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:8px 10px;border-radius:999px;font-size:12px;white-space:nowrap}
+    .wrap{width:100%;max-width:1180px;margin:0 auto;padding:16px;display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start}
+    .sidebar{position:sticky;top:88px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;border:1px solid #e7edf5}
+    .navbtn{width:100%;border:0;background:transparent;text-align:left;padding:12px;border-radius:13px;color:#263247;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:14px}.navbtn:hover{background:#f2f6fb}.navbtn.active{background:linear-gradient(135deg,var(--navy),#1a4b78);color:white}.navsmall{font-size:11px;color:var(--muted);padding:10px 12px 6px;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
+    main{min-width:0}.section{display:none}.section.active{display:block}.grid{display:grid;gap:14px}.grid.cols4{grid-template-columns:repeat(4,1fr)}.grid.cols3{grid-template-columns:repeat(3,1fr)}.grid.cols2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid #e7edf5;padding:16px}.card h2,.card h3{margin:0 0 12px}.card h2{font-size:22px}.card h3{font-size:16px}.muted{color:var(--muted)}
+    .stat{padding:16px;border-radius:18px;background:linear-gradient(180deg,#fff,#f8fbff);border:1px solid #e8eef7}.stat .num{font-size:28px;font-weight:900;color:var(--navy)}.stat .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}.stat .hint{font-size:12px;margin-top:4px;color:#6b7280}
+    label{display:block;font-size:12px;font-weight:800;color:#344155;margin:0 0 6px}input,select,textarea{width:100%;border:1px solid #d9e2ee;border-radius:13px;padding:11px 12px;font-size:14px;background:#fff;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:#7aa7d9;box-shadow:0 0 0 3px rgba(37,99,235,.09)}textarea{min-height:90px;resize:vertical}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.formgrid .full{grid-column:1/-1}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.btn{border:0;border-radius:13px;padding:11px 14px;font-weight:800;cursor:pointer;background:#e9eef6;color:#172033}.btn.primary{background:linear-gradient(135deg,var(--navy),#1d5a8d);color:white}.btn.gold{background:linear-gradient(135deg,var(--gold),#f0c76e);color:#14233a}.btn.red{background:#fee2e2;color:#991b1b}.btn.green{background:#dcfce7;color:#166534}.btn.blue{background:#dbeafe;color:#1d4ed8}.btn:active{transform:translateY(1px)}
+    .tablewrap{overflow:auto;border:1px solid #e6edf5;border-radius:16px}table{width:100%;border-collapse:collapse;background:white;min-width:760px}th,td{padding:11px 12px;border-bottom:1px solid #eef2f7;text-align:left;font-size:13px;vertical-align:top}th{background:#f5f8fc;color:#334155;font-size:12px;text-transform:uppercase;letter-spacing:.45px;position:sticky;top:0;z-index:1}tr:hover td{background:#fbfdff}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;background:#eef2ff;color:#3730a3}.badge.green{background:#dcfce7;color:#166534}.badge.orange{background:#ffedd5;color:#9a3412}.badge.red{background:#fee2e2;color:#991b1b}.badge.blue{background:#dbeafe;color:#1d4ed8}.badge.gray{background:#f1f5f9;color:#475569}
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{max-width:240px}.empty{padding:24px;border:1px dashed #cbd5e1;border-radius:16px;color:#64748b;text-align:center;background:#f8fafc}.notice{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.45}.reportbox{background:#fff;border-radius:18px;border:1px solid #e7edf5;padding:18px}.report-title{border-left:5px solid var(--gold);padding-left:12px}.report-title h2{margin:0}.print-area{background:white}.small{font-size:12px}.right{margin-left:auto}.danger-text{color:var(--red);font-weight:800}
+    .login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at top left,#dbeafe,transparent 30%),linear-gradient(135deg,#0f2f4f,#123a63)}.login-card{max-width:440px;width:100%;background:white;border-radius:24px;box-shadow:0 25px 60px rgba(0,0,0,.25);padding:24px}.login-card .logo{margin-bottom:12px}.login-card h1{margin:0 0 6px}.login-card p{margin:0 0 18px;color:#64748b;line-height:1.45}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr}.sidebar{position:relative;top:auto;display:flex;overflow:auto;gap:8px}.navsmall{display:none}.navbtn{min-width:max-content}.grid.cols4,.grid.cols3,.grid.cols2{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.pill{display:none}.topbar{padding:13px 14px}.brand h1{font-size:17px}.logo{width:40px;height:40px}.card{padding:14px}}
+    @media print{body{background:white}.topbar,.sidebar,.no-print,.actions,.toolbar{display:none!important}.wrap{display:block;max-width:none;padding:0}.card{box-shadow:none;border:0}.section{display:block}.section:not(.print-section){display:none!important}.print-area{padding:0}table{min-width:0}th,td{font-size:11px;padding:6px}.reportbox{border:0;padding:0}}
+  </style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="login-card">
+    <div class="logo">BMC</div>
+    <h1>Banten Market Control</h1>
+    <p>Aplikasi ringan untuk kontrol kunjungan sales, outlet, order, follow-up, dan laporan harian team pemasaran Banten.</p>
+    <label>Nama pengguna</label>
+    <input id="loginName" placeholder="Contoh: Mas Tomi / Admin / Sales 1" />
+    <div style="height:10px"></div>
+    <label>Role</label>
+    <select id="loginRole">
+      <option>Owner</option><option>Koordinator</option><option>Admin</option><option>Sales</option><option>Viewer</option>
+    </select>
+    <div class="actions">
+      <button class="btn primary" onclick="enterApp()">Masuk Aplikasi</button>
+      <button class="btn" onclick="loadSample()">Isi Contoh Data</button>
+    </div>
+    <div class="notice" style="margin-top:14px">Versi basic GitHub: data tersimpan di perangkat/browser masing-masing. Untuk berbagi data antar-HP, gunakan Export/Import Data.</div>
+  </div>
+</div>
+
+<div id="app" class="app" style="display:none">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">BMC</div>
+      <div><h1>Banten Market Control</h1><p>Team Pemasaran Wilayah Provinsi Banten</p></div>
+      <div class="pill" id="userPill">User</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <aside class="sidebar no-print">
+      <div class="navsmall">Menu Utama</div>
+      <button class="navbtn active" data-target="dashboard">📊 Dashboard</button>
+      <button class="navbtn" data-target="kunjungan">🧭 Input Kunjungan</button>
+      <button class="navbtn" data-target="outlet">🏪 Data Outlet</button>
+      <button class="navbtn" data-target="order">🧾 Input Order</button>
+      <button class="navbtn" data-target="followup">⏰ Follow-up</button>
+      <button class="navbtn" data-target="kompetitor">🎯 Kompetitor</button>
+      <button class="navbtn" data-target="laporan">🖨️ Laporan</button>
+      <div class="navsmall">Data</div>
+      <button class="navbtn" data-target="pengaturan">⚙️ Export / Import</button>
+    </aside>
+
+    <main>
+      <section id="dashboard" class="section active">
+        <div class="grid cols4" id="stats"></div>
+        <div class="grid cols2" style="margin-top:14px">
+          <div class="card"><h3>Ringkasan Hari Ini</h3><div id="todaySummary"></div></div>
+          <div class="card"><h3>Follow-up Prioritas</h3><div id="priorityFollowup"></div></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3>Aktivitas Terbaru</h3><div id="latestActivity"></div></div>
+      </section>
+
+      <section id="kunjungan" class="section">
+        <div class="card"><h2>Input Kunjungan Sales</h2><p class="muted">Isi singkat saja. Data sensitif bisa dikosongkan atau diisi langsung oleh team Mas Tomi.</p>
+          <div class="formgrid">
+            <div><label>Tanggal</label><input type="date" id="v_date"></div>
+            <div><label>Nama Sales</label><input id="v_sales" placeholder="Nama sales"></div>
+            <div><label>Wilayah</label><select id="v_area"><option>Serang</option><option>Cilegon</option><option>Pandeglang</option><option>Lebak</option><option>Kota Tangerang</option><option>Kab. Tangerang</option><option>Tangerang Selatan</option><option>Lainnya</option></select></div>
+            <div><label>Nama Outlet</label><input id="v_outlet" placeholder="Nama toko/grosir/prospek"></div>
+            <div><label>Jenis Outlet</label><select id="v_type"><option>Toko</option><option>Grosir</option><option>Agen</option><option>Distributor</option><option>Warung</option><option>Lainnya</option></select></div>
+            <div><label>Status Hasil</label><select id="v_status"><option>Prospek Baru</option><option>Tertarik</option><option>Sudah Order</option><option>Perlu Follow-up</option><option>Harga Belum Cocok</option><option>Stok Lama Masih Ada</option><option>Menolak</option><option>Tidak Ketemu PIC</option></select></div>
+            <div><label>Produk Ditawarkan</label><input id="v_product" placeholder="Contoh: GCC 99 isi 12"></div>
+            <div><label>Potensi Order</label><input id="v_potential" placeholder="Contoh: 5 karton / belum pasti"></div>
+            <div class="full"><label>Kendala / Catatan Lapangan</label><textarea id="v_note" placeholder="Catatan singkat dari sales"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveVisit()">Simpan Kunjungan</button><button class="btn" onclick="clearVisitForm()">Bersihkan</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="toolbar"><h3 style="margin:0">Riwayat Kunjungan</h3><input id="visitSearch" oninput="renderVisits()" placeholder="Cari sales/outlet/area"></div><div id="visitsTable"></div></div>
+      </section>
+
+      <section id="outlet" class="section">
+        <div class="card"><h2>Data Outlet / Prospek</h2>
+          <div class="formgrid">
+            <div><label>Nama Outlet</label><input id="o_name" placeholder="Nama toko/grosir"></div>
+            <div><label>PIC / Pemilik</label><input id="o_pic" placeholder="Opsional"></div>
+            <div><label>No HP</label><input id="o_phone" placeholder="Opsional"></div>
+            <div><label>Wilayah</label><select id="o_area"><option>Serang</option><option>Cilegon</option><option>Pandeglang</option><option>Lebak</option><option>Kota Tangerang</option><option>Kab. Tangerang</option><option>Tangerang Selatan</option><option>Lainnya</option></select></div>
+            <div><label>Jenis</label><select id="o_type"><option>Toko</option><option>Grosir</option><option>Agen</option><option>Distributor</option><option>Warung</option><option>Lainnya</option></select></div>
+            <div><label>Status Outlet</label><select id="o_status"><option>Prospek</option><option>Aktif</option><option>Perlu Follow-up</option><option>Macet</option><option>Menolak</option></select></div>
+            <div class="full"><label>Alamat / Catatan</label><textarea id="o_note" placeholder="Alamat singkat atau catatan"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveOutlet()">Simpan Outlet</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="toolbar"><h3 style="margin:0">Daftar Outlet</h3><input id="outletSearch" oninput="renderOutlets()" placeholder="Cari outlet/area/status"></div><div id="outletsTable"></div></div>
+      </section>
+
+      <section id="order" class="section">
+        <div class="card"><h2>Input Order Masuk</h2>
+          <div class="formgrid">
+            <div><label>Tanggal Order</label><input type="date" id="ord_date"></div>
+            <div><label>Nama Outlet/Customer</label><input id="ord_customer" placeholder="Nama outlet/customer"></div>
+            <div><label>Sales</label><input id="ord_sales" placeholder="Nama sales"></div>
+            <div><label>Wilayah</label><select id="ord_area"><option>Serang</option><option>Cilegon</option><option>Pandeglang</option><option>Lebak</option><option>Kota Tangerang</option><option>Kab. Tangerang</option><option>Tangerang Selatan</option><option>Lainnya</option></select></div>
+            <div><label>Produk</label><input id="ord_product" placeholder="Merek / produk"></div>
+            <div><label>Jumlah</label><input id="ord_qty" placeholder="Contoh: 5 karton"></div>
+            <div><label>Sistem Bayar</label><select id="ord_pay"><option>Cash</option><option>Tempo</option><option>DP</option><option>Belum ditentukan</option></select></div>
+            <div><label>Status Order</label><select id="ord_status"><option>Baru</option><option>Diproses</option><option>Dikirim</option><option>Selesai</option><option>Batal</option></select></div>
+            <div class="full"><label>Catatan</label><textarea id="ord_note" placeholder="Catatan order, jadwal kirim, dll"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveOrder()">Simpan Order</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="toolbar"><h3 style="margin:0">Daftar Order</h3><input id="orderSearch" oninput="renderOrders()" placeholder="Cari order/customer/area"></div><div id="ordersTable"></div></div>
+      </section>
+
+      <section id="followup" class="section">
+        <div class="card"><h2>Jadwal Follow-up</h2>
+          <div class="formgrid">
+            <div><label>Tanggal Follow-up</label><input type="date" id="f_date"></div>
+            <div><label>Outlet/Customer</label><input id="f_customer" placeholder="Nama outlet/customer"></div>
+            <div><label>Sales/PIC</label><input id="f_sales" placeholder="Nama sales/PIC"></div>
+            <div><label>Status</label><select id="f_status"><option>Belum Dihubungi</option><option>Sudah Dihubungi</option><option>Menunggu Jawaban</option><option>Deal/Order</option><option>Gagal</option><option>Tunda</option></select></div>
+            <div class="full"><label>Catatan Follow-up</label><textarea id="f_note" placeholder="Apa yang perlu ditanyakan atau dikejar"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveFollowup()">Simpan Follow-up</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="toolbar"><h3 style="margin:0">Daftar Follow-up</h3><input id="followSearch" oninput="renderFollowups()" placeholder="Cari follow-up"></div><div id="followupsTable"></div></div>
+      </section>
+
+      <section id="kompetitor" class="section">
+        <div class="card"><h2>Data Kompetitor</h2>
+          <div class="formgrid">
+            <div><label>Wilayah</label><select id="c_area"><option>Serang</option><option>Cilegon</option><option>Pandeglang</option><option>Lebak</option><option>Kota Tangerang</option><option>Kab. Tangerang</option><option>Tangerang Selatan</option><option>Lainnya</option></select></div>
+            <div><label>Merek Kompetitor</label><input id="c_brand" placeholder="Nama merek"></div>
+            <div><label>Harga Pasar</label><input id="c_price" placeholder="Contoh: Rp 7.000"></div>
+            <div><label>Kekuatan Kompetitor</label><select id="c_strength"><option>Lemah</option><option>Sedang</option><option>Kuat</option><option>Sangat Kuat</option></select></div>
+            <div class="full"><label>Catatan</label><textarea id="c_note" placeholder="Kualitas, promo, respon toko, dll"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveCompetitor()">Simpan Kompetitor</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="toolbar"><h3 style="margin:0">Daftar Kompetitor</h3><input id="competitorSearch" oninput="renderCompetitors()" placeholder="Cari kompetitor/area"></div><div id="competitorsTable"></div></div>
+      </section>
+
+      <section id="laporan" class="section print-section">
+        <div class="card print-area"><div class="reportbox">
+          <div class="toolbar no-print"><h2 style="margin:0">Laporan Harian</h2><input type="date" id="reportDate" onchange="renderReport()"><button class="btn primary" onclick="window.print()">Print / Save PDF</button><button class="btn" onclick="downloadReportText()">Download TXT</button></div>
+          <div id="reportContent"></div>
+        </div></div>
+      </section>
+
+      <section id="pengaturan" class="section">
+        <div class="card"><h2>Export / Import Data</h2>
+          <div class="notice"><b>Penting:</b> karena versi ini hanya basic GitHub Pages, data tidak otomatis terkumpul di satu database. Gunakan tombol export/import untuk pindah atau gabung data antar perangkat.</div>
+          <div class="actions">
+            <button class="btn primary" onclick="exportJSON()">Export Data JSON</button>
+            <button class="btn blue" onclick="exportCSVAll()">Export CSV Ringkas</button>
+            <label class="btn gold" style="display:inline-block;margin:0;cursor:pointer">Import JSON <input type="file" accept="application/json" onchange="importJSON(event)" style="display:none"></label>
+            <button class="btn red" onclick="resetData()">Reset Semua Data</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3>Catatan Versi</h3><p class="muted">Versi ini cocok untuk demo/prototype GitHub. Kalau nanti Mas Tomi ingin semua data sales terlihat real-time dari banyak HP, aplikasi perlu dinaikkan ke Supabase/Firebase.</p></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const KEY='bmc_data_v1';
+let currentUser=JSON.parse(localStorage.getItem('bmc_user')||'null');
+let db=loadDB();
+function today(){return new Date().toISOString().slice(0,10)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function loadDB(){return JSON.parse(localStorage.getItem(KEY)||'{"visits":[],"outlets":[],"orders":[],"followups":[],"competitors":[]}')}
+function saveDB(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function enterApp(){const name=document.getElementById('loginName').value.trim()||'Pengguna';const role=document.getElementById('loginRole').value;currentUser={name,role,loginAt:new Date().toISOString()};localStorage.setItem('bmc_user',JSON.stringify(currentUser));showApp()}
+function showApp(){if(!currentUser)return;document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';document.getElementById('userPill').textContent=currentUser.name+' • '+currentUser.role;initDates();renderAll()}
+function initDates(){['v_date','ord_date','f_date','reportDate'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today()})}
+function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function match(o,q){q=(q||'').toLowerCase();return !q||JSON.stringify(o).toLowerCase().includes(q)}
+function badge(status){let cls='gray';if(/Aktif|Selesai|Deal|Sudah|Dikirim|Tertarik/i.test(status))cls='green';if(/Follow|Baru|Prospek|Diproses|Menunggu/i.test(status))cls='blue';if(/Harga|Stok|Tunda|Belum/i.test(status))cls='orange';if(/Menolak|Batal|Gagal|Macet/i.test(status))cls='red';return `<span class="badge ${cls}">${esc(status)}</span>`}
+function del(type,id){if(confirm('Hapus data ini?')){db[type]=db[type].filter(x=>x.id!==id);saveDB()}}
+function navTo(id){document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.target===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));if(id==='laporan')renderReport()}
+document.querySelectorAll('.navbtn').forEach(btn=>btn.addEventListener('click',()=>navTo(btn.dataset.target)));
+function saveVisit(){let r={id:uid(),createdAt:new Date().toISOString(),date:v_date.value||today(),sales:v_sales.value,area:v_area.value,outlet:v_outlet.value,type:v_type.value,status:v_status.value,product:v_product.value,potential:v_potential.value,note:v_note.value,user:currentUser?.name};if(!r.outlet){alert('Nama outlet wajib diisi');return}db.visits.unshift(r);saveDB();clearVisitForm();navTo('dashboard')}
+function clearVisitForm(){['v_sales','v_outlet','v_product','v_potential','v_note'].forEach(id=>document.getElementById(id).value='');v_date.value=today()}
+function saveOutlet(){let r={id:uid(),createdAt:new Date().toISOString(),name:o_name.value,pic:o_pic.value,phone:o_phone.value,area:o_area.value,type:o_type.value,status:o_status.value,note:o_note.value,user:currentUser?.name};if(!r.name){alert('Nama outlet wajib diisi');return}db.outlets.unshift(r);saveDB();['o_name','o_pic','o_phone','o_note'].forEach(id=>document.getElementById(id).value='')}
+function saveOrder(){let r={id:uid(),createdAt:new Date().toISOString(),date:ord_date.value||today(),customer:ord_customer.value,sales:ord_sales.value,area:ord_area.value,product:ord_product.value,qty:ord_qty.value,pay:ord_pay.value,status:ord_status.value,note:ord_note.value,user:currentUser?.name};if(!r.customer){alert('Nama customer wajib diisi');return}db.orders.unshift(r);saveDB();['ord_customer','ord_sales','ord_product','ord_qty','ord_note'].forEach(id=>document.getElementById(id).value='');ord_date.value=today()}
+function saveFollowup(){let r={id:uid(),createdAt:new Date().toISOString(),date:f_date.value||today(),customer:f_customer.value,sales:f_sales.value,status:f_status.value,note:f_note.value,user:currentUser?.name};if(!r.customer){alert('Nama customer wajib diisi');return}db.followups.unshift(r);saveDB();['f_customer','f_sales','f_note'].forEach(id=>document.getElementById(id).value='');f_date.value=today()}
+function saveCompetitor(){let r={id:uid(),createdAt:new Date().toISOString(),area:c_area.value,brand:c_brand.value,price:c_price.value,strength:c_strength.value,note:c_note.value,user:currentUser?.name};if(!r.brand){alert('Merek kompetitor wajib diisi');return}db.competitors.unshift(r);saveDB();['c_brand','c_price','c_note'].forEach(id=>document.getElementById(id).value='')}
+function renderTable(rows,cols,type){if(!rows.length)return '<div class="empty">Belum ada data.</div>';return `<div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${c.h}</th>`).join('')}<th>Aksi</th></tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${c.f(r)}</td>`).join('')}<td><button class="btn red small" onclick="del('${type}','${r.id}')">Hapus</button></td></tr>`).join('')}</tbody></table></div>`}
+function renderVisits(){let q=visitSearch?.value||'';let rows=db.visits.filter(r=>match(r,q));visitsTable.innerHTML=renderTable(rows,[{h:'Tanggal',f:r=>esc(r.date)},{h:'Sales',f:r=>esc(r.sales)},{h:'Area',f:r=>esc(r.area)},{h:'Outlet',f:r=>esc(r.outlet)},{h:'Produk',f:r=>esc(r.product)},{h:'Status',f:r=>badge(r.status)},{h:'Catatan',f:r=>esc(r.note)}],'visits')}
+function renderOutlets(){let q=outletSearch?.value||'';let rows=db.outlets.filter(r=>match(r,q));outletsTable.innerHTML=renderTable(rows,[{h:'Outlet',f:r=>esc(r.name)},{h:'PIC',f:r=>esc(r.pic)},{h:'HP',f:r=>esc(r.phone)},{h:'Area',f:r=>esc(r.area)},{h:'Jenis',f:r=>esc(r.type)},{h:'Status',f:r=>badge(r.status)},{h:'Catatan',f:r=>esc(r.note)}],'outlets')}
+function renderOrders(){let q=orderSearch?.value||'';let rows=db.orders.filter(r=>match(r,q));ordersTable.innerHTML=renderTable(rows,[{h:'Tanggal',f:r=>esc(r.date)},{h:'Customer',f:r=>esc(r.customer)},{h:'Sales',f:r=>esc(r.sales)},{h:'Area',f:r=>esc(r.area)},{h:'Produk',f:r=>esc(r.product)},{h:'Jumlah',f:r=>esc(r.qty)},{h:'Bayar',f:r=>esc(r.pay)},{h:'Status',f:r=>badge(r.status)}],'orders')}
+function renderFollowups(){let q=followSearch?.value||'';let rows=db.followups.filter(r=>match(r,q));followupsTable.innerHTML=renderTable(rows,[{h:'Tanggal',f:r=>esc(r.date)},{h:'Customer',f:r=>esc(r.customer)},{h:'Sales',f:r=>esc(r.sales)},{h:'Status',f:r=>badge(r.status)},{h:'Catatan',f:r=>esc(r.note)}],'followups')}
+function renderCompetitors(){let q=competitorSearch?.value||'';let rows=db.competitors.filter(r=>match(r,q));competitorsTable.innerHTML=renderTable(rows,[{h:'Area',f:r=>esc(r.area)},{h:'Merek',f:r=>esc(r.brand)},{h:'Harga',f:r=>esc(r.price)},{h:'Kekuatan',f:r=>badge(r.strength)},{h:'Catatan',f:r=>esc(r.note)}],'competitors')}
+function renderDashboard(){let d=today();let todayVisits=db.visits.filter(x=>x.date===d);let todayOrders=db.orders.filter(x=>x.date===d);let activeOutlets=db.outlets.filter(x=>x.status==='Aktif').length;let fuDue=db.followups.filter(x=>x.date<=d&&!/Deal|Gagal/i.test(x.status)).length;stats.innerHTML=[['Kunjungan Hari Ini',todayVisits.length,'Input sales lapangan'],['Order Hari Ini',todayOrders.length,'Order masuk'],['Outlet Aktif',activeOutlets,'Total outlet aktif'],['Follow-up Prioritas',fuDue,'Jatuh tempo/tertunda']].map(s=>`<div class="stat"><div class="label">${s[0]}</div><div class="num">${s[1]}</div><div class="hint">${s[2]}</div></div>`).join('');todaySummary.innerHTML=todayVisits.length?`<ul>${todayVisits.slice(0,6).map(v=>`<li><b>${esc(v.sales||'-')}</b> ke ${esc(v.outlet)} — ${badge(v.status)}</li>`).join('')}</ul>`:'<div class="empty">Belum ada kunjungan hari ini.</div>';let fus=db.followups.filter(x=>x.date<=d&&!/Deal|Gagal/i.test(x.status)).slice(0,8);priorityFollowup.innerHTML=fus.length?`<ul>${fus.map(f=>`<li><b>${esc(f.customer)}</b> (${esc(f.date)}) — ${badge(f.status)}</li>`).join('')}</ul>`:'<div class="empty">Tidak ada follow-up jatuh tempo.</div>';let acts=[...db.visits.map(x=>({...x,kind:'Kunjungan',title:x.outlet,date:x.createdAt})),...db.orders.map(x=>({...x,kind:'Order',title:x.customer,date:x.createdAt})),...db.followups.map(x=>({...x,kind:'Follow-up',title:x.customer,date:x.createdAt}))].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,10);latestActivity.innerHTML=acts.length?renderTable(acts,[{h:'Jenis',f:r=>esc(r.kind)},{h:'Nama',f:r=>esc(r.title)},{h:'Area/Sales',f:r=>esc(r.area||r.sales||'-')},{h:'Status',f:r=>badge(r.status||'-')},{h:'Waktu',f:r=>esc(new Date(r.createdAt).toLocaleString('id-ID'))}],'_none').replace(/<th>Aksi<\/th>|<td><button.*?<\/button><\/td>/g,''):'<div class="empty">Belum ada aktivitas.</div>'}
+function renderReport(){let d=reportDate.value||today();let visits=db.visits.filter(x=>x.date===d);let orders=db.orders.filter(x=>x.date===d);let fus=db.followups.filter(x=>x.date===d);let areaCount={};visits.forEach(v=>areaCount[v.area]=(areaCount[v.area]||0)+1);reportContent.innerHTML=`<div class="report-title"><h2>Laporan Harian Pemasaran Banten</h2><div class="muted">Tanggal: ${esc(d)} • Dicetak: ${new Date().toLocaleString('id-ID')}</div></div><br><div class="grid cols4"><div class="stat"><div class="label">Kunjungan</div><div class="num">${visits.length}</div></div><div class="stat"><div class="label">Order</div><div class="num">${orders.length}</div></div><div class="stat"><div class="label">Follow-up</div><div class="num">${fus.length}</div></div><div class="stat"><div class="label">Area Aktif</div><div class="num">${Object.keys(areaCount).length}</div></div></div><br><h3>1. Kunjungan Sales</h3>${renderTable(visits,[{h:'Sales',f:r=>esc(r.sales)},{h:'Area',f:r=>esc(r.area)},{h:'Outlet',f:r=>esc(r.outlet)},{h:'Produk',f:r=>esc(r.product)},{h:'Status',f:r=>badge(r.status)},{h:'Catatan',f:r=>esc(r.note)}],'visits').replace(/<th>Aksi<\/th>|<td><button.*?<\/button><\/td>/g,'')}<h3>2. Order Masuk</h3>${renderTable(orders,[{h:'Customer',f:r=>esc(r.customer)},{h:'Sales',f:r=>esc(r.sales)},{h:'Area',f:r=>esc(r.area)},{h:'Produk',f:r=>esc(r.product)},{h:'Jumlah',f:r=>esc(r.qty)},{h:'Status',f:r=>badge(r.status)}],'orders').replace(/<th>Aksi<\/th>|<td><button.*?<\/button><\/td>/g,'')}<h3>3. Follow-up Hari Ini</h3>${renderTable(fus,[{h:'Customer',f:r=>esc(r.customer)},{h:'Sales',f:r=>esc(r.sales)},{h:'Status',f:r=>badge(r.status)},{h:'Catatan',f:r=>esc(r.note)}],'followups').replace(/<th>Aksi<\/th>|<td><button.*?<\/button><\/td>/g,'')}<h3>4. Ringkasan Area</h3><div class="tablewrap"><table><thead><tr><th>Area</th><th>Jumlah Kunjungan</th></tr></thead><tbody>${Object.entries(areaCount).map(([a,n])=>`<tr><td>${esc(a)}</td><td>${n}</td></tr>`).join('')||'<tr><td colspan="2">Belum ada data</td></tr>'}</tbody></table></div>`}
+function renderAll(){renderDashboard();renderVisits();renderOutlets();renderOrders();renderFollowups();renderCompetitors();renderReport()}
+function exportJSON(){download('banten-market-control-data-'+today()+'.json',JSON.stringify(db,null,2),'application/json')}
+function importJSON(e){let f=e.target.files[0];if(!f)return;let reader=new FileReader();reader.onload=()=>{try{let incoming=JSON.parse(reader.result);db={visits:[],outlets:[],orders:[],followups:[],competitors:[],...incoming};saveDB();alert('Data berhasil diimport')}catch(err){alert('File JSON tidak valid')}};reader.readAsText(f)}
+function flatten(arr,fields){return [fields.join(','),...arr.map(o=>fields.map(f=>'"'+String(o[f]||'').replace(/"/g,'""')+'"').join(','))].join('\n')}
+function exportCSVAll(){let parts=[];parts.push('KUNJUNGAN\n'+flatten(db.visits,['date','sales','area','outlet','type','status','product','potential','note']));parts.push('\n\nOUTLET\n'+flatten(db.outlets,['name','pic','phone','area','type','status','note']));parts.push('\n\nORDER\n'+flatten(db.orders,['date','customer','sales','area','product','qty','pay','status','note']));download('banten-market-control-ringkas-'+today()+'.csv',parts.join('\n'),'text/csv')}
+function download(name,content,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(confirm('Reset semua data di perangkat ini?')){db={visits:[],outlets:[],orders:[],followups:[],competitors:[]};saveDB()}}
+function downloadReportText(){let d=reportDate.value||today();let lines=[`LAPORAN HARIAN PEMASARAN BANTEN`, `Tanggal: ${d}`, `Kunjungan: ${db.visits.filter(x=>x.date===d).length}`, `Order: ${db.orders.filter(x=>x.date===d).length}`, `Follow-up: ${db.followups.filter(x=>x.date===d).length}`];download('laporan-banten-'+d+'.txt',lines.join('\n'),'text/plain')}
+function loadSample(){db={visits:[{id:uid(),createdAt:new Date().toISOString(),date:today(),sales:'Sales 1',area:'Serang',outlet:'Toko Contoh Barokah',type:'Toko',status:'Tertarik',product:'GCC 99 isi 12',potential:'2 karton',note:'Minta follow-up harga dan jadwal kirim',user:'Demo'}],outlets:[{id:uid(),createdAt:new Date().toISOString(),name:'Toko Contoh Barokah',pic:'Pak Ahmad',phone:'',area:'Serang',type:'Toko',status:'Prospek',note:'Dekat pasar utama',user:'Demo'}],orders:[{id:uid(),createdAt:new Date().toISOString(),date:today(),customer:'Toko Contoh Barokah',sales:'Sales 1',area:'Serang',product:'GCC 99 isi 12',qty:'2 karton',pay:'Cash',status:'Baru',note:'Menunggu konfirmasi kirim',user:'Demo'}],followups:[{id:uid(),createdAt:new Date().toISOString(),date:today(),customer:'Toko Contoh Barokah',sales:'Sales 1',status:'Belum Dihubungi',note:'Konfirmasi order dan jadwal kirim',user:'Demo'}],competitors:[{id:uid(),createdAt:new Date().toISOString(),area:'Serang',brand:'Kompetitor A',price:'Rp 7.000',strength:'Sedang',note:'Banyak di grosir kecil',user:'Demo'}]};saveDB();enterApp()}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+if(currentUser)showApp();
+</script>
+</body>
+</html>
